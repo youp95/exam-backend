@@ -179,7 +179,7 @@ public class CompanyFacade implements ICompanyFacade{
 
     @Override
     public BikeDTO deleteBike(long id) throws NotFoundException {
-    EntityManager em = emf.createEntityManager();
+    EntityManager em = getEntityManager();
         try{
             Bike b = em.find(Bike.class, id);
             if(b == null) throw new NotFoundException("Bike with id " + id + " doesnt exist.");
@@ -194,7 +194,7 @@ public class CompanyFacade implements ICompanyFacade{
 
     @Override
     public RentalDTO deleteRental(long id) throws NotFoundException {
-         EntityManager em = emf.createEntityManager();
+         EntityManager em = getEntityManager();
         try{
             Rental r = em.find(Rental.class, id);
             if(r == null) throw new NotFoundException("Rental with id " + id + " doesnt exist.");
@@ -210,7 +210,7 @@ public class CompanyFacade implements ICompanyFacade{
 
     @Override
     public MemberDTO deleteMember(long id) throws NotFoundException {
-         EntityManager em = emf.createEntityManager();
+         EntityManager em = getEntityManager();
         try{
             Member m = em.find(Member.class, id);
             if(m == null) throw new NotFoundException("Member with id " + id + " doesnt exist.");
@@ -227,7 +227,7 @@ public class CompanyFacade implements ICompanyFacade{
     public List<BikeDTO> getAllBikes() {
             EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT new entities.dto.BikeDTO(bike) FROM Bike bike", BikeDTO.class).getResultList();
+            return em.createQuery("SELECT new dto.BikeDTO(b) FROM Bike b", BikeDTO.class).getResultList();
         } finally {
             em.close();
         }
@@ -237,7 +237,7 @@ public class CompanyFacade implements ICompanyFacade{
     public List<RentalDTO> getAllRentals() {
         EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT new entities.dto.RentalDTO(rental) FROM Rental rental", RentalDTO.class).getResultList();
+            return em.createQuery("SELECT new dto.RentalDTO(r) FROM Rental r", RentalDTO.class).getResultList();
         } finally {
             em.close();
         }
@@ -245,17 +245,37 @@ public class CompanyFacade implements ICompanyFacade{
 
     @Override
     public List<BikeDTO> getBikesByAddress(String address) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = getEntityManager();
+        try {
+             return em.createQuery("SELECT new dto.BikeDTO(b) from Bike b WHERE b.storage.adress = :address")
+                    .setParameter("address", address).getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public List<BikeDTO> getBikesByDay(String date) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = getEntityManager();
+        try {
+             return em.createQuery("SELECT new dto.BikeDTO(b) from Bike b WHERE b.rental.date = :date")
+                    .setParameter("date", date).getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public BikeDTO getBikeDetails(Bike b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BikeDTO getBikeDetails(int id) {
+         EntityManager em = getEntityManager();
+        try {
+            Bike bike = em.createQuery("SELECT b FROM Bike b WHERE b.id = :id", Bike.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return new BikeDTO(bike);
+        } finally {
+            em.close();
+        } 
     }
 
     @Override
