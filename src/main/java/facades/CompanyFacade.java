@@ -9,10 +9,12 @@ import entities.Bike;
 import entities.Member;
 import entities.Rental;
 import entities.Storage;
+import errorhandling.NotFoundException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.ws.rs.WebApplicationException;
 
 /**
  *
@@ -46,22 +48,62 @@ public class CompanyFacade implements ICompanyFacade{
 
     @Override
     public BikeDTO addBike(Bike b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    EntityManager em = getEntityManager();
+        try {
+            Bike bike = new Bike(b.getId(), b.getMake(), b.getGender(), b.getGears(), b.getDayPrice());
+            em.getTransaction().begin();
+            em.persist(bike);
+            em.getTransaction().commit();
+            return new BikeDTO(bike);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public RentalDTO addRental(Rental r) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManager em = getEntityManager();
+        try {
+            Rental rental = new Rental(r.getId(), r.getDate());
+            em.getTransaction().begin();
+            em.persist(rental);
+            em.getTransaction().commit();
+            return new RentalDTO(rental);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public MemberDTO addMember(Member m) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         EntityManager em = getEntityManager();
+        try {
+            if(m.getName() != null){
+                throw new WebApplicationException("Member already signed up", 302);
+            }
+            Member member = new Member(m.getId(), m.getName(), m.getSignupDate(), m.getAccount());
+            em.getTransaction().begin();
+            em.persist(member);
+            em.getTransaction().commit();
+            return new MemberDTO(member);
+        } finally {
+            em.close();
+        }
     }
 
+    
     @Override
     public StorageDTO addStorage(Storage s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       EntityManager em = getEntityManager();
+        try {
+            Storage storage = new Storage(s.getId(), s.getAddress(), s.getCapacity());
+            em.getTransaction().begin();
+            em.persist(storage);
+            em.getTransaction().commit();
+            return new StorageDTO(storage);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -75,23 +117,48 @@ public class CompanyFacade implements ICompanyFacade{
     }
 
     @Override
-    public BikeDTO deleteBike(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BikeDTO deleteBike(long id) throws NotFoundException {
+    EntityManager em = emf.createEntityManager();
+        try{
+            Bike b = em.find(Bike.class, id);
+            if(b == null) throw new NotFoundException("Bike with id " + id + " doesnt exist.");
+            em.getTransaction().begin();
+            em.remove(b);
+            em.getTransaction().commit();
+            return new BikeDTO(b);
+        }finally{
+            em.close();
+        }
     }
 
     @Override
-    public RentalDTO deleteRental(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public RentalDTO deleteRental(long id) throws NotFoundException {
+         EntityManager em = emf.createEntityManager();
+        try{
+            Rental r = em.find(Rental.class, id);
+            if(r == null) throw new NotFoundException("Rental with id " + id + " doesnt exist.");
+            em.getTransaction().begin();
+            em.remove(r);
+            em.getTransaction().commit();
+            return new RentalDTO(r);
+        }finally{
+            em.close();
+        }
     }
 
     @Override
-    public MemberDTO deleteMember(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public StorageDTO deleteStorage(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public MemberDTO deleteMember(long id) throws NotFoundException {
+         EntityManager em = emf.createEntityManager();
+        try{
+            Member m = em.find(Member.class, id);
+            if(m == null) throw new NotFoundException("Member with id " + id + " doesnt exist.");
+            em.getTransaction().begin();
+            em.remove(m);
+            em.getTransaction().commit();
+            return new MemberDTO(m);
+        }finally{
+            em.close();
+        }
     }
 
     @Override

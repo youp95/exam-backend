@@ -13,6 +13,7 @@ import entities.Bike;
 import entities.Member;
 import entities.Rental;
 import entities.Storage;
+import errorhandling.NotFoundException;
 import java.util.List;
 
 /**
@@ -30,10 +31,9 @@ public interface ICompanyFacade {
    public StorageDTO addStorage(Storage s);
    public BikeDTO editBike(Bike b);
    public RentalDTO editRental(Rental r);
-   public BikeDTO deleteBike(long id);
-   public RentalDTO deleteRental(long id);
-   public MemberDTO deleteMember(long id);
-   public StorageDTO deleteStorage(long id);
+   public BikeDTO deleteBike(long id) throws NotFoundException;
+   public RentalDTO deleteRental(long id)throws NotFoundException;
+   public MemberDTO deleteMember(long id)throws NotFoundException;
    public List<BikeDTO> getAllBikes();
    public List<RentalDTO> getAllRentals();
    public List<BikeDTO> getBikesByLocation(String address);
