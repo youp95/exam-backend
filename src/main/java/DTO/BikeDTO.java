@@ -19,8 +19,7 @@ import javax.persistence.OneToMany;
  */
 public class BikeDTO {
     
-    private Long id;
-    
+    private int id;
     private String make;
     private String size;
     private String gender;
@@ -41,11 +40,11 @@ public class BikeDTO {
         }
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

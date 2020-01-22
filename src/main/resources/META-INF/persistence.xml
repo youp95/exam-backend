@@ -5,6 +5,10 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entities.RenameMe</class>
     <class>DTO.DTO</class>
+    <class>entities.Bike</class>
+    <class>entities.Storage</class>
+    <class>entities.Rental</class>
+    <class>entities.Member</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <!-- DO NOT remove the line below. It's not set by the  entityUtils.EMF_Creator -->
