@@ -36,7 +36,7 @@ public interface ICompanyFacade {
    public MemberDTO deleteMember(long id)throws NotFoundException;
    public List<BikeDTO> getAllBikes();
    public List<RentalDTO> getAllRentals();
-   public List<BikeDTO> getBikesByLocation(String address);
+   public List<BikeDTO> getBikesByAddress(String address);
    public List<BikeDTO> getBikesByDay(String date);
    public BikeDTO getBikeDetails(Bike b);
    public RentalDTO chooseRental(Rental r);

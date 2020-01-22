@@ -10,6 +10,7 @@ import entities.Member;
 import entities.Rental;
 import entities.Storage;
 import errorhandling.NotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,14 +46,49 @@ public class CompanyFacade implements ICompanyFacade{
     private EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
+    
+     private static Rental getRental(int id){
+        EntityManager em = emf.createEntityManager();
+        try{
+            if (id == 0) return null;
+            Rental rental = em.createNamedQuery("Rental.getById", Rental.class).setParameter("id", id).getSingleResult();
+            return rental;
+        }catch(Exception e){
+            return null;
+        }finally{
+            em.close();
+        }
+    }
 
     @Override
     public BikeDTO addBike(Bike b) {
     EntityManager em = getEntityManager();
+     List<Rental> newRentals = new ArrayList<>();
+     List<Rental> existingRentals = new ArrayList<>();
+     Rental rental;
+     Bike bike;
+     Storage storage = b.getStorage();
+     
+                
         try {
-            Bike bike = new Bike(b.getId(), b.getMake(), b.getGender(), b.getGears(), b.getDayPrice());
+            
+            bike = new Bike(b.getId(), b.getMake(), b.getSize(), b.getGender(), b.getGears(), b.getDayPrice());
+            bike.setStorage(storage);
             em.getTransaction().begin();
             em.persist(bike);
+            
+            for(Rental r : bike.getRentals()){
+                rental = getRental(r.getId());
+                if(rental == null){
+                    em.persist(r);
+                }else{
+                    existingRentals.add(rental);
+                }
+            }
+            
+            if(existingRentals.size() > 0) bike.setRentals(existingRentals);
+            
+            
             em.getTransaction().commit();
             return new BikeDTO(bike);
         } finally {
@@ -63,8 +99,16 @@ public class CompanyFacade implements ICompanyFacade{
     @Override
     public RentalDTO addRental(Rental r) {
         EntityManager em = getEntityManager();
+        Rental rental;
+        Member member = r.getMember();
+        Bike bike = r.getBike();
+        
+        
         try {
-            Rental rental = new Rental(r.getId(), r.getDate());
+            
+            rental = new Rental(r.getId(), r.getDate());
+            rental.setMember(member);
+            rental.setBike(bike);
             em.getTransaction().begin();
             em.persist(rental);
             em.getTransaction().commit();
@@ -77,13 +121,30 @@ public class CompanyFacade implements ICompanyFacade{
     @Override
     public MemberDTO addMember(Member m) {
          EntityManager em = getEntityManager();
+         
+         List<Rental> newRentals = new ArrayList<>();
+         List<Rental> existingRentals = new ArrayList<>();
+         Member member;
+         Rental rental;
+         
         try {
-            if(m.getName() != null){
-                throw new WebApplicationException("Member already signed up", 302);
-            }
-            Member member = new Member(m.getId(), m.getName(), m.getSignupDate(), m.getAccount());
+            
+            member = new Member(m.getId(), m.getName(), m.getSignupDate(), m.getAccount());
             em.getTransaction().begin();
             em.persist(member);
+            
+            for(Rental r : member.getRentals()){
+                rental = getRental(r.getId());
+                if(rental == null){
+                    em.persist(r);
+                }else{
+                    existingRentals.add(rental);
+                }
+            }
+            
+            if(existingRentals.size() > 0) member.setRentals(existingRentals);
+            
+            
             em.getTransaction().commit();
             return new MemberDTO(member);
         } finally {
@@ -145,6 +206,7 @@ public class CompanyFacade implements ICompanyFacade{
             em.close();
         }
     }
+    
 
     @Override
     public MemberDTO deleteMember(long id) throws NotFoundException {
@@ -182,7 +244,7 @@ public class CompanyFacade implements ICompanyFacade{
     }
 
     @Override
-    public List<BikeDTO> getBikesByLocation(String address) {
+    public List<BikeDTO> getBikesByAddress(String address) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

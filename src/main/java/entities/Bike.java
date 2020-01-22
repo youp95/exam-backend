@@ -39,9 +39,10 @@ public class Bike implements Serializable {
     @OneToMany (mappedBy = "bike")
     private List<Rental> rentals;
 
-    public Bike(int id, String make, String gender, int gears, int dayPrice) {
+    public Bike(int id, String make, String size, String gender, int gears, int dayPrice) {
         this.id = id;
         this.make = make;
+        this.size = size;
         this.gender = gender;
         this.gears = gears;
         this.dayPrice = dayPrice;
