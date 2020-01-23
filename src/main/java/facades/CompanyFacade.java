@@ -17,10 +17,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.WebApplicationException;
 
-/**
- *
- * Rename Class to a relevant name Add add relevant facade methods
- */
+
+ 
 public class CompanyFacade implements ICompanyFacade{
 
     private static CompanyFacade instance;
