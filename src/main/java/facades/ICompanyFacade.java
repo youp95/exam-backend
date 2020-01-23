@@ -37,7 +37,7 @@ public interface ICompanyFacade {
    public List<BikeDTO> getAllBikes();
    public List<RentalDTO> getAllRentals();
    public List<BikeDTO> getBikesByAddress(String address);
-   public List<BikeDTO> getBikesByDay(String date);
+   public List<BikeDTO> getBikesByDate(String date);
    public BikeDTO getBikeDetails(int id);
    public RentalDTO chooseRental(Rental r);
    public void payRental();

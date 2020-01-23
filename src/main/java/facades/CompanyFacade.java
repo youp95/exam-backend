@@ -255,7 +255,7 @@ public class CompanyFacade implements ICompanyFacade{
     }
 
     @Override
-    public List<BikeDTO> getBikesByDay(String date) {
+    public List<BikeDTO> getBikesByDate(String date) {
         EntityManager em = getEntityManager();
         try {
              return em.createQuery("SELECT new dto.BikeDTO(b) from Bike b WHERE b.rental.date = :date")

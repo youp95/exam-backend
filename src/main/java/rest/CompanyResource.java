@@ -103,6 +103,40 @@ public class CompanyResource {
         return GSON.toJson(FACADE.deleteMember(id));
     }
     
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("allbikes")
+    public String getAllBikes() {
+        return GSON.toJson(FACADE.getAllBikes());
+    }
+    
+     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("allrentals")
+    public String getAllRentals() {
+        return GSON.toJson(FACADE.getAllRentals());
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getbyaddress/{address}")
+    public String getBikesByAddress(@PathParam("address") String address) {
+        return GSON.toJson(FACADE.getBikesByAddress(address));
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getbydate/{date}")
+    public String getBikesByDate(@PathParam("date") String date) {
+        return GSON.toJson(FACADE.getBikesByDate(date));
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getbike/{bike}")
+    public String getBikeDetails(@PathParam("id") int id) {
+        return GSON.toJson(FACADE.getBikeDetails(id));
+    }
     
     
 }
