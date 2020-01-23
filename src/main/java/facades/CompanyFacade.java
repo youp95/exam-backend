@@ -72,7 +72,7 @@ public class CompanyFacade implements ICompanyFacade{
                 
         try {
             
-            bike = new Bike(b.getId(), b.getMake(), b.getSize(), b.getGender(), b.getGears(), b.getDayPrice());
+            bike = new Bike(b.getMake(), b.getSize(), b.getGender(), b.getGears(), b.getDayPrice());
             bike.setStorage(storage);
             em.getTransaction().begin();
             em.persist(bike);
@@ -106,7 +106,7 @@ public class CompanyFacade implements ICompanyFacade{
         
         try {
             
-            rental = new Rental(r.getId(), r.getDate());
+            rental = new Rental(r.getDate());
             rental.setMember(member);
             rental.setBike(bike);
             em.getTransaction().begin();
@@ -129,7 +129,7 @@ public class CompanyFacade implements ICompanyFacade{
          
         try {
             
-            member = new Member(m.getId(), m.getName(), m.getSignupDate(), m.getAccount());
+            member = new Member(m.getName(), m.getSignupDate(), m.getAccount());
             em.getTransaction().begin();
             em.persist(member);
             
@@ -157,7 +157,7 @@ public class CompanyFacade implements ICompanyFacade{
     public StorageDTO addStorage(Storage s) {
        EntityManager em = getEntityManager();
         try {
-            Storage storage = new Storage(s.getId(), s.getAddress(), s.getCapacity());
+            Storage storage = new Storage(s.getAddress(), s.getCapacity());
             em.getTransaction().begin();
             em.persist(storage);
             em.getTransaction().commit();
@@ -278,21 +278,74 @@ public class CompanyFacade implements ICompanyFacade{
         } 
     }
 
-    @Override
-    public RentalDTO chooseRental(Rental r) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  public void populateDB() {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("Bike.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Rental.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Member.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Storage.deleteAllRows").executeUpdate();
+            em.getTransaction().commit();
+            
+            Bike b1;
+            Bike b2;
+            Bike b3;
+            Bike b4;
+            
+            Rental r1;
+            Rental r2;
+            Rental r3;
+            Rental r4;
+            
+            Member m1;
+            Member m2;
+            Member m3;
+            Member m4;
+            
+            Storage s1;
+            Storage s2;
+            
+            b1 = new Bike("Kildemoes", "L", "male", 4, 120);
+            b2 = new Bike("trek", "L", "male", 1, 80);
+            b3 = new Bike("specialized", "S", "male", 3, 120);
+            b4 = new Bike("cannondale", "M", "male", 32, 500);
+            
+            r1 = new Rental("24-01-2020");
+            r2 = new Rental("24-02-2020");
+            r3 = new Rental("24-03-2020");
+            r4 = new Rental("24-04-2020");
+            
+            m1 = new Member("Carsten", "23-01-2015", 2000);
+            m2 = new Member("Niels", "20-02-2014", 1000);
+            m3 = new Member("John", "28-03-2017", 500);
+            m4 = new Member("Hans", "30-04-2019", 256);
+            
+            s1 = new Storage("Storvej 30", 2000);
+            s2 = new Storage("Storvej 31", 1500);
+            
+            
+            
+            em.persist(b1);
+            em.persist(b2);
+            em.persist(b3);
+            em.persist(b4);
+            em.persist(r1);
+            em.persist(r2);
+            em.persist(r3);
+            em.persist(r4);
+            em.persist(m1);
+            em.persist(m2);
+            em.persist(m3);
+            em.persist(m4);
+            em.persist(s1);
+            em.persist(s2);
+            System.out.println("Saved test data to database");
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
     }
 
-    @Override
-    public void payRental() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void sortBikes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
-    
-
 }

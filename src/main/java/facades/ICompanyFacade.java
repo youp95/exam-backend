@@ -39,10 +39,7 @@ public interface ICompanyFacade {
    public List<BikeDTO> getBikesByAddress(String address);
    public List<BikeDTO> getBikesByDate(String date);
    public BikeDTO getBikeDetails(int id);
-   public RentalDTO chooseRental(Rental r);
-   public void payRental();
-   public void sortBikes();
-   
+   public void populateDB();
   
    
    

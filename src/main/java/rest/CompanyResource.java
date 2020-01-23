@@ -138,5 +138,12 @@ public class CompanyResource {
         return GSON.toJson(FACADE.getBikeDetails(id));
     }
     
+    @GET
+    @Path("populatebike")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String populateDatabase() {
+        FACADE.populateDB();
+        return "{\"Message\":\"Database ready\"}";
+    }
     
 }

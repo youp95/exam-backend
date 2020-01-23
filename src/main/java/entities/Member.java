@@ -33,8 +33,7 @@ public class Member implements Serializable {
     @OneToMany(mappedBy = "member")
     private List<Rental> rentals;
 
-    public Member(int id, String name, String signupDate, int account) {
-        this.id = id;
+    public Member(String name, String signupDate, int account) {
         this.name = name;
         this.signupDate = signupDate;
         this.account = account;

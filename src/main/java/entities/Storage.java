@@ -33,8 +33,7 @@ public class Storage implements Serializable {
     @OneToMany (mappedBy = "storage")
     private List<Bike> bikes;
 
-    public Storage(int id, String address, int capacity) {
-        this.id = id;
+    public Storage(String address, int capacity) {
         this.address = address;
         this.capacity = capacity;
     }

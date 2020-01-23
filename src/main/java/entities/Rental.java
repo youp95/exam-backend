@@ -26,6 +26,7 @@ public class Rental implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     private String date;
     
     @ManyToOne
@@ -33,8 +34,7 @@ public class Rental implements Serializable {
     @ManyToOne
     private Bike bike;
 
-    public Rental(int id, String date) {
-        this.id = id;
+    public Rental(String date) {
         this.date = date;
     }
 
